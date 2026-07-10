@@ -9,3 +9,4 @@ D:\Net8Service\t_Net8Services\shared\Shop.Events\obj\Debug\net8.0\Shop.Events.dl
 D:\Net8Service\t_Net8Services\shared\Shop.Events\obj\Debug\net8.0\refint\Shop.Events.dll
 D:\Net8Service\t_Net8Services\shared\Shop.Events\obj\Debug\net8.0\Shop.Events.pdb
 D:\Net8Service\t_Net8Services\shared\Shop.Events\obj\Debug\net8.0\ref\Shop.Events.dll
+d:\Net8Service\t_Net8Services\shared\Shop.Events\obj\Debug\net8.0\Shop.Events.sourcelink.json
