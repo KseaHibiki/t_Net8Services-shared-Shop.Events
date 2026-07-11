@@ -1,0 +1,12 @@
+d:\Net8Service\t_Net8Services\shared\Shop.Events\bin\Release\net8.0\Shop.Events.deps.json
+D:\Net8Service\t_Net8Services\shared\Shop.Events\bin\Release\net8.0\Shop.Events.dll
+D:\Net8Service\t_Net8Services\shared\Shop.Events\bin\Release\net8.0\Shop.Events.pdb
+D:\Net8Service\t_Net8Services\shared\Shop.Events\obj\Release\net8.0\Shop.Events.GeneratedMSBuildEditorConfig.editorconfig
+D:\Net8Service\t_Net8Services\shared\Shop.Events\obj\Release\net8.0\Shop.Events.AssemblyInfoInputs.cache
+D:\Net8Service\t_Net8Services\shared\Shop.Events\obj\Release\net8.0\Shop.Events.AssemblyInfo.cs
+D:\Net8Service\t_Net8Services\shared\Shop.Events\obj\Release\net8.0\Shop.Events.csproj.CoreCompileInputs.cache
+D:\Net8Service\t_Net8Services\shared\Shop.Events\obj\Release\net8.0\Shop.Events.sourcelink.json
+D:\Net8Service\t_Net8Services\shared\Shop.Events\obj\Release\net8.0\Shop.Events.dll
+D:\Net8Service\t_Net8Services\shared\Shop.Events\obj\Release\net8.0\refint\Shop.Events.dll
+D:\Net8Service\t_Net8Services\shared\Shop.Events\obj\Release\net8.0\Shop.Events.pdb
+d:\Net8Service\t_Net8Services\shared\Shop.Events\obj\Release\net8.0\ref\Shop.Events.dll
