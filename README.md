@@ -10,7 +10,7 @@
 t_Net8Services/
 ├── gateway/                        # YARP 反向代理网关
 ├── services/
-│   ├── Shop/                       # 订单服务 — 订单创建/完成
+│   ├── Shop/                       # 订单服务 — 订单创建/支付/完成
 │   ├── WMS/                        # 仓储服务 — 库存管理
 │   └── Seller/                     # 商家服务 — 商家通知
 ├── shared/
@@ -31,6 +31,7 @@ t_Net8Services/
 | 事件 | 字段 | 发布者 | 消费者 | 说明 |
 |---|---|---|---|---|
 | [OrderCreatedEvent](OrderCreatedEvent.cs) | `OrderId`, `ProductId`, `Quantity`, `CreatedAt` | Shop | WMS | 订单创建成功，请求扣减库存 |
+| [OrderPaidEvent](OrderPaidEvent.cs) | `OrderId`, `ProductId`, `Quantity`, `PaidAt` | Shop | WMS | 订单已完成支付，确认扣减库存 |
 | [StockDeductedEvent](StockDeductedEvent.cs) | `OrderId`, `ProductId`, `Quantity`, `DeductedAt` | WMS | Shop | 库存已扣减，通知订单更新状态 |
 | [StockInsufficientEvent](StockInsufficientEvent.cs) | `OrderId`, `ProductId`, `RequestedQuantity`, `OccurredAt` | WMS | Shop | 库存不足，通知订单标记失败 |
 | [OrderCompletedEvent](OrderCompletedEvent.cs) | `OrderId`, `CompletedAt` | Shop | Seller | 订单完成，通知商家 |
@@ -47,28 +48,32 @@ t_Net8Services/
         ▼                       ▼                       ▼
 ┌───────────────┐     ┌───────────────┐     ┌────────────────┐
 │  Shop 服务    │     │  WMS 服务     │     │  Seller 服务   │
-│  (订单)       │     │  (仓储)       │     │  (商家)        │
+│  (订单/支付)  │     │  (仓储)       │     │  (商家)        │
 └───────┬───────┘     └───────┬───────┘     └────────┬───────┘
         │                     │                       │
         │  ① OrderCreated    │                       │
         │──────────────────►  │                       │
         │                     │                       │
-        │  ② StockDeducted   │                       │
+        │  ② OrderPaid       │                       │
+        │──────────────────►  │                       │
+        │                     │                       │
+        │  ③ StockDeducted   │                       │
         │◄──────────────────  │                       │
         │                     │                       │
-        │  ③ StockInsufficient│                      │
+        │  ④ StockInsufficient│                      │
         │◄──────────────────  │                       │
         │                     │                       │
-        │  ④ OrderCompleted  │                       │
+        │  ⑤ OrderCompleted   │                      │
         │──────────────────────────────────────────►  │
 ```
 
 **流程说明：**
 
-1. **① 订单创建** — 用户在 Shop 创建订单后，Shop 发出 `OrderCreatedEvent`，WMS 消费并开始扣减库存
-2. **② 库存充足** — WMS 扣减成功，发出 `StockDeductedEvent`，Shop 将订单状态更新为"已确认"
-3. **③ 库存不足** — WMS 发现库存不够，发出 `StockInsufficientEvent`，Shop 将订单标记为"库存不足"失败状态
-4. **④ 订单完成** — 整个流程走完，Shop 发出 `OrderCompletedEvent`，Seller 接收后进行商家侧处理
+1. **① 订单创建** — 用户在 Shop 创建订单后，Shop 发出 `OrderCreatedEvent`，WMS 接收准备扣减库存
+2. **② 订单支付** — 用户完成支付后，Shop 发出 `OrderPaidEvent`，WMS 确认支付已到账后执行库存扣减
+3. **③ 库存充足** — WMS 扣减成功，发出 `StockDeductedEvent`，Shop 将订单状态更新为"已确认"
+4. **④ 库存不足** — WMS 发现库存不够，发出 `StockInsufficientEvent`，Shop 将订单标记为"库存不足"失败状态
+5. **⑤ 订单完成** — 整个流程走完，Shop 发出 `OrderCompletedEvent`，Seller 接收后进行商家侧处理
 
 ## 项目配置
 
@@ -99,7 +104,7 @@ public record YourNewEvent(Guid SomeId, string SomeData, DateTime OccurredAt);
 
 ### 序列化说明
 
-消息使用 **MassTransit 默认的 JSON 序列化**。`record` 类型的 `record` 位置参数会自动生成序列化所需的构造器和 `Deconstruct` 方法，无需额外配置。
+消息使用 **MassTransit 默认的 JSON 序列化**。`record` 类型的位置参数会自动生成序列化所需的构造器和 `Deconstruct` 方法，无需额外配置。
 
 ### 命名空间
 
